@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment files (NEVER commit secrets)
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+*.coveragerc
+
+# Logs
+*.log
+logs/
+
+# Docker
+.dockerignore
+
+# Data / temp
+data/raw/
+data/processed/
+*.csv
+*.json.bak
+
+# Streamlit
+.streamlit/
