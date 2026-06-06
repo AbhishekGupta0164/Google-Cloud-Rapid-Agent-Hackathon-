@@ -13,6 +13,7 @@ from collections import Counter
 
 import pymongo
 import streamlit as st
+from streamlit_autorefresh import st_autorefresh
 import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
@@ -861,10 +862,8 @@ with st.sidebar:
 # AUTO-REFRESH
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 if auto_refresh and refresh_rate:
-    st.markdown(
-        f'<meta http-equiv="refresh" content="{refresh_rate}">',
-        unsafe_allow_html=True
-    )
+    # Use st_autorefresh to smoothly trigger a rerun without a full browser reload or flashing screen.
+    st_autorefresh(interval=refresh_rate * 1000, key="dashboard_autorefresh")
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # HELPER FUNCTIONS
@@ -970,17 +969,15 @@ if "Overview" in page:
                 risk_lvl = details.get("risk_level", "")
                 badge    = risk_badge(risk_lvl) if risk_lvl else ""
 
-                st.markdown(f"""
-                <div class="log-row">
-                    <span style="font-size:1rem;">{icon}</span>
-                    <span class="log-time">{ts}</span>
-                    <span class="log-agent">{agent}</span>
-                    <span style="color:#334155;font-size:0.9rem;">›</span>
-                    <span class="log-action">{action}</span>
-                    <span class="log-pr">PR #{pr_id}</span>
-                    {badge}
-                </div>
-                """, unsafe_allow_html=True)
+                st.markdown(f"""<div class="log-row">
+<span style="font-size:1rem;">{icon}</span>
+<span class="log-time">{ts}</span>
+<span class="log-agent">{agent}</span>
+<span style="color:#334155;font-size:0.9rem;">›</span>
+<span class="log-action">{action}</span>
+<span class="log-pr">PR #{pr_id}</span>
+{badge}
+</div>""", unsafe_allow_html=True)
         else:
             st.markdown("""
             <div class="glass-card" style="text-align:center;padding:2rem;">
@@ -1530,22 +1527,20 @@ elif "Audit" in page:
             "risk_narrator": "📝", "action_agent": "🚀"
         }.get(agent, "🤖")
 
-        st.markdown(f"""
-        <div class="log-row" style="padding:0.8rem 1rem;">
-            <span style="font-size:1.1rem;">{agent_icon}</span>
-            <div style="flex:1;">
-                <div style="display:flex;align-items:center;gap:8px;">
-                    <span class="log-agent" style="font-size:0.8rem;">{agent}</span>
-                    <span style="color:#334155;">›</span>
-                    <span class="log-action" style="font-size:0.82rem;">{action.replace("_", " ")}</span>
-                    {badge_html}
-                </div>
-                <div style="font-size:0.72rem;color:#475569;margin-top:3px;font-family:'JetBrains Mono',monospace;">
-                    PR #{pr_id} · {ts} {score_str}
-                </div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown(f"""<div class="log-row" style="padding:0.8rem 1rem;">
+<span style="font-size:1.1rem;">{agent_icon}</span>
+<div style="flex:1;">
+<div style="display:flex;align-items:center;gap:8px;">
+<span class="log-agent" style="font-size:0.8rem;">{agent}</span>
+<span style="color:#334155;">›</span>
+<span class="log-action" style="font-size:0.82rem;">{action.replace("_", " ")}</span>
+{badge_html}
+</div>
+<div style="font-size:0.72rem;color:#475569;margin-top:3px;font-family:'JetBrains Mono',monospace;">
+PR #{pr_id} · {ts} {score_str}
+</div>
+</div>
+</div>""", unsafe_allow_html=True)
 
     if not all_logs:
         st.markdown("""
